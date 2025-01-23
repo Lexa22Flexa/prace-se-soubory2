@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,13 +20,21 @@ public class Evidence {
         try (Scanner scanner = new Scanner(new BufferedReader(new FileReader("resources/" + nazevSouboru)))) {
             while(scanner.hasNextLine()) {
                 String radek = scanner.nextLine();
-                //String zakaznik = radek.split(oddelovac2);
-                pridejZakaznikyDoSeznamu(parseZakaznik(radek, oddelovac));
+                oddelRadek(radek, oddelovac, oddelovac2);
             }
         } catch (FileNotFoundException e) {
             throw new EvidenceException("Soubor nebyl nalezen!");
         }
     }
+
+    private void oddelRadek(String radek, String oddelovac, String oddelovac2) throws EvidenceException {
+        String [] polozky = radek.split(oddelovac2);
+        for (int i = 0; i < polozky.length; i++) {
+            String zakaznik = polozky[i];
+            pridejZakaznikyDoSeznamu(parseZakaznik(zakaznik, oddelovac));
+        }
+    }
+
 
     private Zakaznik parseZakaznik(String radek, String oddelovac) throws EvidenceException {
         String [] polozky = radek.split(oddelovac);
@@ -38,5 +45,15 @@ public class Evidence {
         String jmeno = polozky[1].trim();
         String prijmeni = polozky[2].trim();
         return new Zakaznik(id, jmeno, prijmeni);
+    }
+
+    public List<Zakaznik> zakazniciPodLimitem() {
+        List<Zakaznik> zakazniciPodminky = new ArrayList<>();
+        for(Zakaznik zakaznik : getSeznamZakazniku()) {
+            if(zakaznik.getId() < 50 && zakaznik.getJmeno().equals("Ivana")) {
+                zakazniciPodminky.add(zakaznik);
+            }
+        }
+        return zakazniciPodminky;
     }
 }

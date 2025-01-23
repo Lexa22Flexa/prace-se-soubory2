@@ -3,10 +3,13 @@ public class Main {
         Evidence evidence = new Evidence();
         try {
             evidence.nactiZakaznikyZeSouboru("zakaznici.txt", " ", ";");
+            for(Zakaznik zakaznik : evidence.zakazniciPodLimitem()) {
+                System.out.println(zakaznik.getId());
+            }
         } catch (EvidenceException e) {
             System.err.println(e);
         }
 
-        System.out.println(evidence.getSeznamZakazniku().size());
+
     }
 }
